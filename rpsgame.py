@@ -1,6 +1,5 @@
 import random
 
-
 choices = ['Rock','Paper','Scissors']
 
 # Stat Trackers
@@ -12,7 +11,10 @@ paper_choices = ("p","paper","Paper")
 games_played_total = 0
 games_won_total = 0
 games_lost_total = 0
-win_rate_total = 0
+try:
+  win_rate_total = round(games_won_total/(games_won_total+games_lost_total), 2)
+except ZeroDivisionError:
+  win_rate_total = 0
 
 session_played = 0
 session_won = 0
@@ -53,6 +55,7 @@ def win_game():
   else:
     current_streak = 1
   
+  # Updating longest win streak - checks if the current streak is bigger than the longest win streak
   if current_streak > win_streak:
     win_streak = current_streak
 
@@ -102,6 +105,8 @@ while play is True:
     
     if user_choice == comp_choice:
       print(f"Computer chose {comp_choice}. Draw!")
+      games_played_total += 1
+      session_played += 1
     elif user_choice == "Rock" and comp_choice == "Scissors":
       win_game()
       print(f"Computer chose {comp_choice}. You win!")
@@ -124,14 +129,34 @@ while play is True:
   # SAVE FILE
   elif command == "save":
     f = open("rpssave.txt","w")
-  
+
+    f.write(f"{games_played_total}/{games_won_total}/{games_lost_total}/{rock_played}/{scissors_played}/{paper_played}/{current_streak}/{win_streak}/{loss_streak}")
+    f.close()
+
+  elif command == "load":
+    g = open("rpssave.txt", "r")
+    gamedata = g.read()
+
+    unpackeddata = []
+    unpackeddata = gamedata.split("/")
+
+    games_played_total = unpackeddata[0]
+    games_won_total = unpackeddata[1]
+    games_lost_total = unpackeddata[2]
+
+    g.close()
+
 
   elif command in ("stat","stats"):
+    try:
+      win_rate_total = round(int(games_won_total)/(int(games_won_total)+int(games_lost_total))*100, 2)
+    except ZeroDivisionError:
+      win_rate_total = 0
     print(
       f"Total games played = {games_played_total}\n" +
       f"Total games won = {games_won_total}\n" +
       f"Total games lost = {games_lost_total}\n" + 
-      f"Total win rate = {round(games_won_total/games_played_total, 2)}%\n\n" +
+      f"Total win rate = {win_rate_total}%\n\n" +
       f"Rock played = {rock_played}\n" +
       f"Scissors played = {scissors_played}\n" +
       f"Paper played = {scissors_played}\n\n" +
