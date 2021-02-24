@@ -133,6 +133,8 @@ while play is True:
     f.write(f"{games_played_total}/{games_won_total}/{games_lost_total}/{rock_played}/{scissors_played}/{paper_played}/{current_streak}/{win_streak}/{loss_streak}")
     f.close()
 
+    print("Game saved in a file named 'rpssave.txt'")
+
   elif command == "load":
     g = open("rpssave.txt", "r")
     gamedata = g.read()
@@ -140,9 +142,19 @@ while play is True:
     unpackeddata = []
     unpackeddata = gamedata.split("/")
 
+    # could find a better way to write this with a loop but I'll leave it for now
+    # Write checks to see if it contains text, etc
     games_played_total = unpackeddata[0]
     games_won_total = unpackeddata[1]
     games_lost_total = unpackeddata[2]
+
+    rock_played = unpackeddata[3]
+    scissors_played = unpackeddata[4]
+    paper_played = unpackeddata[5]
+
+    current_streak = unpackeddata[6]
+    win_streak = unpackeddata[7]
+    loss_streak = unpackeddata[8]
 
     g.close()
 
